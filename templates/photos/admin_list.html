@@ -1,0 +1,21 @@
+{% extends "photos/base.html" %}
+
+{% block content %}
+
+    <ul>
+    {% for photo in photos %}
+        <li>
+            <a href="{% url 'photos:edit' photo.id %}">{{ photo }}</a>
+        </li>
+    {% endfor %}
+    </ul>
+
+    <ul>
+    {% for tag in tags %}
+        <li>
+            <a href="{% url 'edit_tag:edit' tag.id %}">{{ tag }}</a>
+        </li>
+    {% endfor %}
+    </ul>
+
+{% endblock %}

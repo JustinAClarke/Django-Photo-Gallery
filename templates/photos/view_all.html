@@ -1,0 +1,11 @@
+
+
+{% block content %}
+
+    {% for photo in photos %}
+
+        <a href="{% url 'photos:view_single' photo.id %}">{{ photo }}</a>
+
+    {% endfor %}
+
+{% endblock %}

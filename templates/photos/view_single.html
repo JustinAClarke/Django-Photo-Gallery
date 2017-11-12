@@ -1,0 +1,19 @@
+{% extends "photos/base.html" %}
+
+{% block content %}
+<div id="image">
+    <img src="{{ photo.image_file.url }}" />
+</div>
+<div id="notes">
+    <div id="title">
+        {{ photo.title }}
+    </div>
+    <div id="capture_date">
+        {{ photo.capture_date }}
+    </div>
+    <div id="description">
+        {{ photo.description }}
+    </div>
+</div>
+
+{% endblock %}
