@@ -1,0 +1,35 @@
+#main{
+    padding-top:2%;
+    margin-top:2%;
+    margin-left:5%;
+    width:90%;
+    left:5%;
+    right:5%;
+    background-color:lightblue;
+}
+#content{
+    background-color:lightgreen;
+}
+
+
+.photo{
+    margin:3px;
+    max-width: 30%;
+}
+
+.photo:nth-child(odd){
+    background-color:#aaaaff;
+}
+.photo:nth-child(even){
+    background-color:#aaffaa;
+}
+
+.thumbnail{
+    max-width:150px;
+    height:auto;
+}
+
+.preview{
+    max-width:100%;
+    height:auto;
+}

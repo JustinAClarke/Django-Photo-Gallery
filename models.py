@@ -32,7 +32,7 @@ class Photo(models.Model):
     capture_date = models.DateField('Capture Date')
     description = models.TextField(null=True)
     tags = models.ManyToManyField(Tag)
-    image_file = models.ImageField()
+    image_file = models.ImageField(upload_to='photo_files/upload')
     
     def __str__(self):
         return self.title

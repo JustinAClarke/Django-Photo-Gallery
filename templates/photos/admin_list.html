@@ -2,6 +2,7 @@
 
 {% block content %}
 
+<a href="{% url 'photos:add' %}">Add New Photo</a>
     <ul>
     {% for photo in photos %}
         <li>
@@ -10,10 +11,11 @@
     {% endfor %}
     </ul>
 
+    <a href="{% url 'photos:add_tag' %}">Add New Tag</a>
     <ul>
     {% for tag in tags %}
         <li>
-            <a href="{% url 'edit_tag:edit' tag.id %}">{{ tag }}</a>
+            <a href="{% url 'photos:edit_tag' tag.id %}">{{ tag }}</a>
         </li>
     {% endfor %}
     </ul>

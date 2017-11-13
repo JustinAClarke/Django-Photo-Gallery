@@ -60,6 +60,8 @@ urlpatterns = [
     # ex: /photos/preview/
     url(r'^preview/(?P<id>[0-9]+)/$', views.preview, name='preview'),
     
+    # ex: /photos/thumbnail/
+    url(r'^thumbnail/(?P<id>[0-9]+)/$', views.thumbnail, name='thumbnail'),
     
     url(r'^test/(?P<recipe>[0-9]+)/$', views.test, name='test'),
     

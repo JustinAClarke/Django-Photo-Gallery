@@ -17,9 +17,11 @@
     """
 
 from django.shortcuts import get_object_or_404, render
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect,FileResponse,HttpResponse
 from django.urls import reverse
 from django.core.files import File
+
+import urllib, mimetypes
 
 # Create your views here.
 
@@ -40,8 +42,8 @@ def logout(request):
     return HttpResponseRedirect(reverse('photos:index'))
 
 def admin_list(request):
-    photos = Photo.objects.all().order_by('Title')
-    tags = Tag.objects.all().order_by('Title')
+    photos = Photo.objects.all().order_by('title')
+    tags = Tag.objects.all().order_by('title')
     context = {'request': request,'photos':photos,'tags':tags}
     return render(request, 'photos/admin_list.html', context)
 
@@ -51,6 +53,9 @@ def add(request):
         photo = PhotoForm(request.POST, request.FILES) # A form bound to the POST data
         if photo.is_valid(): # All validation rules pass
             new_photo = photo.save()
+            #resize image for thumbnail and preview
+            
+            #end resize
             return HttpResponseRedirect(reverse('photos:view_single', args=(new_photo.id)))
     else:
         photo = PhotoForm()
@@ -98,7 +103,7 @@ def view_single(request,id):
     return render(request, 'photos/view_single.html', context)
 
 def view_all(request):
-    photos = Photo.objects.all().order_by('Title')
+    photos = Photo.objects.all().order_by('title')
     context = {'request': request,'photos':photos}
     return render(request, 'photos/view_all.html', context)
 
@@ -107,7 +112,16 @@ def view_all(request):
 def preview(request,id):
     photo = get_object_or_404(Photo, pk=id)
     #photo_file = open(photo.image_file)
-    return photo.image_file.open()
+    #return FileResponse(photo.image_file.open())
+    return HttpResponse(content=FileResponse(open(photo.image_file.name, 'rb')),content_type=mimetypes.guess_type(photo.image_file.name)[0])
+    
+
+def thumbnail(request,id):
+    photo = get_object_or_404(Photo, pk=id)
+    #photo_file = open(photo.image_file)
+    #return FileResponse(photo.image_file.open())
+    return HttpResponse(content=FileResponse(open(photo.image_file.name, 'rb')),content_type=mimetypes.guess_type(photo.image_file.name)[0])
+
 
 def test(request,id):
     context = {'request': request}

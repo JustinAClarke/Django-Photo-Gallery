@@ -1,11 +1,14 @@
-
+{% extends "photos/base.html" %}
 
 {% block content %}
-
+<div id="photos">
     {% for photo in photos %}
-
-        <a href="{% url 'photos:view_single' photo.id %}">{{ photo }}</a>
-
+        <div class="photo">
+            <a href="{% url 'photos:view_single' photo.id %}">{{ photo }}</a>
+            <img class="thumbnail" src="{% url 'photos:thumbnail' photo.id %}" />
+            {{ photo.image_file }}
+        </div>
     {% endfor %}
+</div>
 
 {% endblock %}

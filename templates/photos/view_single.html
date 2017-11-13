@@ -1,8 +1,11 @@
 {% extends "photos/base.html" %}
 
 {% block content %}
-<div id="image">
-    <img src="{{ photo.image_file.url }}" />
+
+ 
+<div id="preview">
+    <img src="{% url 'photos:preview' photo.id %}" />
+
 </div>
 <div id="notes">
     <div id="title">
@@ -15,5 +18,4 @@
         {{ photo.description }}
     </div>
 </div>
-
 {% endblock %}
