@@ -23,7 +23,14 @@ from .models import Photo, Tag
 class PhotoForm(ModelForm):
     class Meta:
         model = Photo
-        fields = '__all__'
+        #fields = '__all__'
+        fields = [
+        'title',
+        'capture_date',
+        'description',
+        'tags',
+        'image_file',
+        ]
 
 class TagForm(ModelForm):
     class Meta:

@@ -17,11 +17,15 @@
     """
 
 from django.shortcuts import get_object_or_404, render
-from django.http import HttpResponseRedirect,FileResponse,HttpResponse
+from django.http import HttpResponseRedirect,FileResponse,HttpResponse, HttpResponseForbidden
 from django.urls import reverse
 from django.core.files import File
 
-import urllib, mimetypes
+
+import mimetypes
+
+from .resize import createPreview, createThumbnail
+
 
 # Create your views here.
 
@@ -42,6 +46,8 @@ def logout(request):
     return HttpResponseRedirect(reverse('photos:index'))
 
 def admin_list(request):
+    if not request.user.is_authenticated:
+        return HttpResponseRedirect(reverse('photos:index'))
     photos = Photo.objects.all().order_by('title')
     tags = Tag.objects.all().order_by('title')
     context = {'request': request,'photos':photos,'tags':tags}
@@ -49,53 +55,82 @@ def admin_list(request):
 
 
 def add(request):
+    if not request.user.is_authenticated:
+        return HttpResponseRedirect(reverse('photos:index'))
+        
     if request.method == "POST":
         photo = PhotoForm(request.POST, request.FILES) # A form bound to the POST data
         if photo.is_valid(): # All validation rules pass
-            new_photo = photo.save()
             #resize image for thumbnail and preview
             
+            #createPreview(photo.image_file.name,'photo_files/previews/')
+            #createThumbnail(photo.image_file.name,'photo_files/thumbnails/')
             #end resize
-            return HttpResponseRedirect(reverse('photos:view_single', args=(new_photo.id)))
+            new_photo = photo.save()
+            return HttpResponseRedirect(reverse('photos:admin_list'))
     else:
         photo = PhotoForm()
     context = {'request': request,'form':photo}
     return render(request, 'photos/add.html', context)
 
+
+
 def edit(request,id):
+    if not request.user.is_authenticated:
+        return HttpResponseRedirect(reverse('photos:index'))
     photo = get_object_or_404(Photo, pk=id)
     if request.method == "POST":
         photo = PhotoForm(request.POST) # A form bound to the POST data
         if photo.is_valid(): # All validation rules pass
             new_photo = photo.save()
-            return HttpResponseRedirect(reverse('photos:view_single', args=(new_photo.id)))
+            return HttpResponseRedirect(reverse('photos:admin_list'))
     else:
-        photo = PhotoForm()
+        tags_data = photo.tags.values()
+        tags=[]
+        for tag in tags_data:
+            tags.append(tag['id'])
+        data ={
+        'title':photo,
+        'capture_date':photo.capture_date,
+        'description':photo.description,
+        #'tags':tags,
+        'tags':photo.tags.values_list('id',flat=True),
+        'image_file':photo.image_file.name,
+        }
+        photo = PhotoForm(data)
     context = {'request': request,'form':photo}
     return render(request, 'photos/add.html', context)
     
+    
+    
 def add_tag(request):
+    if not request.user.is_authenticated:
+        return HttpResponseRedirect(reverse('photos:index'))
     if request.method == "POST":
         tag = TagForm(request.POST) # A form bound to the POST data
         if tag.is_valid(): # All validation rules pass
             new_tag = tag.save()
-            return HttpResponseRedirect(reverse('photos:add_tag'))
+            return HttpResponseRedirect(reverse('photos:admin_list'))
     else:
         tag = TagForm()
     context = {'request': request,'form':tag}
     return render(request, 'photos/add.html', context)
     
 def edit_tag(request,id):
+    if not request.user.is_authenticated:
+        return HttpResponseRedirect(reverse('photos:index'))
     tag = get_object_or_404(Tag, pk=id)
     if request.method == "POST":
         tag = TagForm(request.POST) # A form bound to the POST data
         if tag.is_valid(): # All validation rules pass
             new_tag = tag.save()
-            return HttpResponseRedirect(reverse('photos:add_tag'))
+            return HttpResponseRedirect(reverse('photos:admin_list'))
     else:
         tag = TagForm()
     context = {'request': request,'form':tag}
     return render(request, 'photos/add.html', context)
+
+
 
 def view_single(request,id):
     photo = get_object_or_404(Photo, pk=id)
@@ -114,6 +149,7 @@ def preview(request,id):
     #photo_file = open(photo.image_file)
     #return FileResponse(photo.image_file.open())
     return HttpResponse(content=FileResponse(open(photo.image_file.name, 'rb')),content_type=mimetypes.guess_type(photo.image_file.name)[0])
+    #return HttpResponse(content=FileResponse(open(photo.preview_file.name, 'rb')),content_type=mimetypes.guess_type(photo.preview_file.name)[0])
     
 
 def thumbnail(request,id):
@@ -121,6 +157,16 @@ def thumbnail(request,id):
     #photo_file = open(photo.image_file)
     #return FileResponse(photo.image_file.open())
     return HttpResponse(content=FileResponse(open(photo.image_file.name, 'rb')),content_type=mimetypes.guess_type(photo.image_file.name)[0])
+    #return HttpResponse(content=FileResponse(open(photo.thumbnail_file.name, 'rb')),content_type=mimetypes.guess_type(photo.thumbnail_file.name)[0])
+
+def original(request,id):
+    if not request.user.is_authenticated:
+        return HttpResponseForbidden("No Access")
+    photo = get_object_or_404(Photo, pk=id)
+    #photo_file = open(photo.image_file)
+    #return FileResponse(photo.image_file.open())
+    return HttpResponse(content=FileResponse(open(photo.image_file.name, 'rb')),content_type=mimetypes.guess_type(photo.image_file.name)[0])
+    #return HttpResponse(content=FileResponse(open(photo.thumbnail_file.name, 'rb')),content_type=mimetypes.guess_type(photo.thumbnail_file.name)[0])
 
 
 def test(request,id):

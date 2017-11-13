@@ -15,26 +15,18 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
     """
+from django import template
+from django.shortcuts import render
+from photos.models import Photo, Tag
 
-from django.db import models
-from django.utils import timezone
 
-# Create your models here.
+register = template.Library()
 
-class Tag(models.Model):
-    title = models.CharField(max_length=200)
-    
-    def __str__(self):
-        return self.title
 
-class Photo(models.Model):
-    title = models.CharField(max_length=200)
-    capture_date = models.DateField('Capture Date')
-    description = models.TextField(null=True)
-    tags = models.ManyToManyField(Tag)
-    image_file = models.ImageField(upload_to='photo_files/upload')
-    preview_file = models.ImageField(upload_to='photo_files/previews',null=True)
-    thumbnail_file = models.ImageField(upload_to='photo_files/thumbnails',null=True)
-    
-    def __str__(self):
-        return self.title
+@register.inclusion_tag('photos/tags.html', takes_context=True)
+#@register.tag
+#@register.filter(name='get_tags')
+def get_all_tags(context):
+    tags = Tag.objects.all().order_by('title')
+    context = {'tags': tags}
+    return context

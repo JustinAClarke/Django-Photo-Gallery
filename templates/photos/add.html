@@ -1,16 +1,28 @@
 {% extends "photos/base.html" %}
 
-
+{% if user.is_authenticated %}
+<meta http-equiv="refresh" content="0; url={% url 'photos:index' %}">
+{% endif %}
 
 {% block content %}
 
 <form action="" enctype="multipart/form-data" method="post">
 <!--form action="//httpbin.org/post" enctype="multipart/form-data" method="post"-->
     {% csrf_token %}
+
     {% for field in form %}
         <div class="fieldWrapper">
-            {{ field.errors }}
-            {{ field.label_tag }} {{ field }}
+            <div class="error">{{ field.errors }}</div>
+            <div>
+                {% if field.field.widget.input_type == "file" %}
+                <div id="preview">
+                    preview
+                    {{ form.image_file |pprint }}
+                    <!--img src="{#% url 'photos:preview' photo.id %#}" /-->
+                </div>
+                {% endif %}
+                {{ field.label_tag }} {{ field }}
+            </div>
             {% if field.help_text %}
             <p class="help">{{ field.help_text|safe }}</p>
             {% endif %}
@@ -20,4 +32,8 @@
 
     <input type='submit' value='Save'>
 </form>
+
+<!--pre>
+{#% debug %#}
+</pre-->
 {% endblock %}

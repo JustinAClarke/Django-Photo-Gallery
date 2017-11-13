@@ -1,6 +1,7 @@
 {% extends "photos/base.html" %}
 
 {% block content %}
+{% load get_tags %}
 
  
 <div id="preview">
@@ -14,8 +15,12 @@
     <div id="capture_date">
         {{ photo.capture_date }}
     </div>
+    <div id="tags">
+        {{ photo.id |get_tags }}
+    </div>
     <div id="description">
         {{ photo.description }}
     </div>
+    
 </div>
 {% endblock %}

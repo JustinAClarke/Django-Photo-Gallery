@@ -30,10 +30,20 @@
 <body>
     <div id="main">
         <div id="title">
-            {{ request }}
-            {{ debug }}
+            Justin Fuhrmeister-Clarke Photo Gallery
         </div>
         {% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}
+        <div id="navbar">
+            {% block navbar %}
+            <ul>
+                <li><a href="{% url 'photos:index' %}">Home</a></li>
+                <li><a href="{% url 'photos:view_all' %}">List</a></li>
+                {% if user.is_authenticated %}
+                <li><a href="{% url 'photos:admin_list' %}">Admin</a></li>
+                {% endif %}
+            </ul>
+            {% endblock %}
+        </div>
 
         <div id="content">
             {% block content %}{% endblock %}
@@ -42,4 +52,5 @@
     <script type="text/javascript" src="{% static 'photos/js/main.js' %}" ></script>
 </body>
 </html>
+
 
