@@ -61,16 +61,19 @@ def add(request):
     if request.method == "POST":
         photo = PhotoForm(request.POST, request.FILES) # A form bound to the POST data
         if photo.is_valid(): # All validation rules pass
-            #resize image for thumbnail and preview
-            
-            #createPreview(photo.image_file.name,'photo_files/previews/')
-            #createThumbnail(photo.image_file.name,'photo_files/thumbnails/')
-            #end resize
             new_photo = photo.save()
+
+            #resize image for thumbnail and preview
+            photo = Photo.objects.get(pk=new_photo.id)
+            photo.preview_file = createPreview(photo.image_file.name,'photo_files/previews/')
+            photo.thumbnail_file = createThumbnail(photo.image_file.name,'photo_files/thumbnails/')
+            photo.save()
+            #end resize
+            
             return HttpResponseRedirect(reverse('photos:admin_list'))
     else:
         photo = PhotoForm()
-    context = {'request': request,'form':photo}
+    context = {'request': request,'form':photo,'id':'0'}
     return render(request, 'photos/add.html', context)
 
 
@@ -83,6 +86,12 @@ def edit(request,id):
         photo = PhotoForm(request.POST) # A form bound to the POST data
         if photo.is_valid(): # All validation rules pass
             new_photo = photo.save()
+            #resize image for thumbnail and preview
+            photo = Photo.objects.get(pk=new_photo.id)
+            photo.preview_file = createPreview(photo.image_file.name,'photo_files/previews/')
+            photo.thumbnail_file = createThumbnail(photo.image_file.name,'photo_files/thumbnails/')
+            photo.save()
+            #end resize
             return HttpResponseRedirect(reverse('photos:admin_list'))
     else:
         tags_data = photo.tags.values()
@@ -98,7 +107,7 @@ def edit(request,id):
         'image_file':photo.image_file.name,
         }
         photo = PhotoForm(data)
-    context = {'request': request,'form':photo}
+    context = {'request': request,'form':photo,'id':id}
     return render(request, 'photos/add.html', context)
     
     
@@ -148,16 +157,17 @@ def preview(request,id):
     photo = get_object_or_404(Photo, pk=id)
     #photo_file = open(photo.image_file)
     #return FileResponse(photo.image_file.open())
-    return HttpResponse(content=FileResponse(open(photo.image_file.name, 'rb')),content_type=mimetypes.guess_type(photo.image_file.name)[0])
-    #return HttpResponse(content=FileResponse(open(photo.preview_file.name, 'rb')),content_type=mimetypes.guess_type(photo.preview_file.name)[0])
+    #return HttpResponse(content=FileResponse(open(photo.image_file.name, 'rb')),content_type=mimetypes.guess_type(photo.image_file.name)[0])
+    #return HttpResponse(content=FileResponse(open(photo.image_file.name, 'rb')),content_type=mimetypes.guess_type(photo.image_file.name)[0])
+    return HttpResponse(content=FileResponse(open(photo.preview_file.name, 'rb')),content_type=mimetypes.guess_type(photo.preview_file.name)[0])
     
 
 def thumbnail(request,id):
     photo = get_object_or_404(Photo, pk=id)
     #photo_file = open(photo.image_file)
     #return FileResponse(photo.image_file.open())
-    return HttpResponse(content=FileResponse(open(photo.image_file.name, 'rb')),content_type=mimetypes.guess_type(photo.image_file.name)[0])
-    #return HttpResponse(content=FileResponse(open(photo.thumbnail_file.name, 'rb')),content_type=mimetypes.guess_type(photo.thumbnail_file.name)[0])
+    #return HttpResponse(content=FileResponse(open(photo.image_file.name, 'rb')),content_type=mimetypes.guess_type(photo.image_file.name)[0])
+    return HttpResponse(content=FileResponse(open(photo.thumbnail_file.name, 'rb')),content_type=mimetypes.guess_type(photo.thumbnail_file.name)[0])
 
 def original(request,id):
     if not request.user.is_authenticated:

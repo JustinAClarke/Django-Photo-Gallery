@@ -3,23 +3,26 @@
 {% block content %}
 {% load get_tags %}
 
+
+{% load get_all_tags %}
+
+{% get_all_tags %}
+
+<br>
+
 <div id="photos">
     {% for photo in photos %}
         <div class="photo" data-href="{{ photo.pk |get_tags }}">
             <a href="{% url 'photos:view_single' photo.id %}">
                 <img class="thumbnail" src="{% url 'photos:thumbnail' photo.id %}" />
             </a>
-            <a class="photo_title" href="{% url 'photos:view_single' photo.id %}">{{ photo }}</a>
+            <!--a class="photo_title" href="{% url 'photos:view_single' photo.id %}">{{ photo }}</a-->
             
         </div>
     {% endfor %}
 </div>
 
 
-<hr>
-{% load get_all_tags %}
-
-{% get_all_tags %}
 
 <script type="text/javascript">
     document.getElementsByTagName("BODY")[0].onhashchange = function() {myFunction()};

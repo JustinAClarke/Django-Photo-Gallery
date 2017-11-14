@@ -36,32 +36,37 @@ def getRotate(orientation):
 
 def createPreview(inFile,outDir,size=[1280,720]):
     pass
-    file, ext = os.path.splitext(infile)
-    im = Image.open(infile)
+    file, ext = os.path.splitext(inFile)
+    title= file.split('/')[-1]
+    im = Image.open(inFile)
     
-    fRotate = open(infile, 'rb')
+    fRotate = open(inFile, 'rb')
     tags = exifread.process_file(fRotate, stop_tag='Orientation')
     orientation=tags['Image Orientation']
     fRotate.close()
    
-    imThumb = im.copy()
-    imThumb=imThumb.rotate(getRotate(orientation),expand=1)
-    imThumb.thumbnail(size)
-    imThumb.save(outDir+file+".jpg","JPEG")
-    imThumb.close()
+    imPreview = im.copy()
+    imPreview=imPreview.rotate(getRotate(orientation),expand=1)
+    imPreview.thumbnail(size)
+    imPreview.save(outDir+"preview-"+title+".jpg","JPEG")
+    imPreview.close()
+    return outDir+"preview-"+title+".jpg"
 
 def createThumbnail(inFile,outDir,size=[256,128]):
     pass
-    file, ext = os.path.splitext(infile)
-    im = Image.open(infile)
+    file, ext = os.path.splitext(inFile)
+    title= file.split('/')[-1]
+    im = Image.open(inFile)
     
-    fRotate = open(infile, 'rb')
+    fRotate = open(inFile, 'rb')
     tags = exifread.process_file(fRotate, stop_tag='Orientation')
     orientation=tags['Image Orientation']
     fRotate.close()
    
-    imThumb = im.copy()
-    imThumb=imThumb.rotate(getRotate(orientation),expand=1)
-    imThumb.thumbnail(size)
-    imThumb.save(outDir+file+".jpg","JPEG")
-    imThumb.close()
+    imThumbnail = im.copy()
+    imThumbnail=imThumbnail.rotate(getRotate(orientation),expand=1)
+    imThumbnail.thumbnail(size)
+    imThumbnail.save(outDir+"thumbnail-"+title+".jpg","JPEG")
+    imThumbnail.close()
+    
+    return outDir+"thumbnail-"+title+".jpg"

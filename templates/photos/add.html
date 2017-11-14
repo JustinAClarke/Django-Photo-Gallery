@@ -16,9 +16,7 @@
             <div>
                 {% if field.field.widget.input_type == "file" %}
                 <div id="preview">
-                    preview
-                    {{ form.image_file |pprint }}
-                    <!--img src="{#% url 'photos:preview' photo.id %#}" /-->
+                    <img class="tiny" src="{% url 'photos:preview' id %}" />
                 </div>
                 {% endif %}
                 {{ field.label_tag }} {{ field }}

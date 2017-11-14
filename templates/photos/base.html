@@ -34,6 +34,7 @@
         </div>
         {% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}
         <div id="navbar">
+            <hr>
             {% block navbar %}
             <ul>
                 <li><a href="{% url 'photos:index' %}">Home</a></li>
@@ -43,6 +44,7 @@
                 {% endif %}
             </ul>
             {% endblock %}
+            <hr>
         </div>
 
         <div id="content">
