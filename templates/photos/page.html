@@ -1,0 +1,10 @@
+{% extends "photos/base.html" %}
+
+
+{% block content %}
+
+{% autoescape off %}
+    {{ data.content }}
+{% endautoescape %}
+{% endblock %}
+

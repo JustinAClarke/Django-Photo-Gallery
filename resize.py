@@ -34,7 +34,7 @@ def getRotate(orientation):
         return 90
     return 180
 
-def createPreview(inFile,outDir,size=[1280,720]):
+def createPreview(inFile,outDir,size=[1280,1280]):
     pass
     file, ext = os.path.splitext(inFile)
     title= file.split('/')[-1]
@@ -42,7 +42,10 @@ def createPreview(inFile,outDir,size=[1280,720]):
     
     fRotate = open(inFile, 'rb')
     tags = exifread.process_file(fRotate, stop_tag='Orientation')
-    orientation=tags['Image Orientation']
+    try:
+        orientation=tags['Image Orientation']
+    except KeyError:
+        orientation="Horizontal (normal)"
     fRotate.close()
    
     imPreview = im.copy()
@@ -52,7 +55,7 @@ def createPreview(inFile,outDir,size=[1280,720]):
     imPreview.close()
     return outDir+"preview-"+title+".jpg"
 
-def createThumbnail(inFile,outDir,size=[256,128]):
+def createThumbnail(inFile,outDir,size=[430,430]):
     pass
     file, ext = os.path.splitext(inFile)
     title= file.split('/')[-1]
@@ -60,7 +63,10 @@ def createThumbnail(inFile,outDir,size=[256,128]):
     
     fRotate = open(inFile, 'rb')
     tags = exifread.process_file(fRotate, stop_tag='Orientation')
-    orientation=tags['Image Orientation']
+    try:
+        orientation=tags['Image Orientation']
+    except KeyError:
+        orientation="Horizontal (normal)"
     fRotate.close()
    
     imThumbnail = im.copy()

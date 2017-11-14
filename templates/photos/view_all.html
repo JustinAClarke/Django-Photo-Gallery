@@ -25,20 +25,6 @@
 
 
 <script type="text/javascript">
-    document.getElementsByTagName("BODY")[0].onhashchange = function() {myFunction()};
-
-    function myFunction() {
-        var list = document.getElementsByClassName("photo"),
-        hash = window.location.hash.substr(1);
-        for(i=0;i<list.length; i++){
-            var data_href = list[i].getAttribute("data-href");
-            if(data_href.includes(hash)){
-                list[i].style = "display:block;";
-            }
-            else{
-                list[i].style = "display:none;";
-            }
-        }
-    }
+    document.getElementsByTagName("BODY")[0].onhashchange = function() {photo_list_hash()};
 </script>
 {% endblock %}

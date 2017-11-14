@@ -30,16 +30,21 @@ from .resize import createPreview, createThumbnail
 # Create your views here.
 
 
-from .models import Photo, Tag
+from .models import Photo, Tag, Page
 from .forms import *
 
+def getTitle(title=False):
+    if(title):
+        return getTitle() + " - " + title
+    else:
+        return "Justin Fuhrmeister-Clarke"
 
 def index(request):
-    context = {'request': request}
+    context = {'title':getTitle(), 'request': request}
     return render(request, 'photos/index.html', context)
 
 def login(request):
-    context = {'request': request}
+    context = {'title':getTitle(), 'request': request}
     return render(request, 'photos/login.html', context)
 
 def logout(request):
@@ -50,7 +55,10 @@ def admin_list(request):
         return HttpResponseRedirect(reverse('photos:index'))
     photos = Photo.objects.all().order_by('title')
     tags = Tag.objects.all().order_by('title')
-    context = {'request': request,'photos':photos,'tags':tags}
+    pages = Page.objects.all().order_by('title')
+    navs = Nav.objects.all().order_by('title')
+
+    context = {'title':getTitle(), 'request': request,'photos':photos,'tags':tags,'pages':pages,'navs':navs}
     return render(request, 'photos/admin_list.html', context)
 
 
@@ -73,7 +81,7 @@ def add(request):
             return HttpResponseRedirect(reverse('photos:admin_list'))
     else:
         photo = PhotoForm()
-    context = {'request': request,'form':photo,'id':'0'}
+    context = {'title':getTitle(), 'request': request,'form':photo,'id':'0'}
     return render(request, 'photos/add.html', context)
 
 
@@ -107,7 +115,7 @@ def edit(request,id):
         'image_file':photo.image_file.name,
         }
         photo = PhotoForm(data)
-    context = {'request': request,'form':photo,'id':id}
+    context = {'title':getTitle(), 'request': request,'form':photo,'id':id}
     return render(request, 'photos/add.html', context)
     
     
@@ -122,7 +130,7 @@ def add_tag(request):
             return HttpResponseRedirect(reverse('photos:admin_list'))
     else:
         tag = TagForm()
-    context = {'request': request,'form':tag}
+    context = {'title':getTitle(), 'request': request,'form':tag}
     return render(request, 'photos/add.html', context)
     
 def edit_tag(request,id):
@@ -135,31 +143,32 @@ def edit_tag(request,id):
             new_tag = tag.save()
             return HttpResponseRedirect(reverse('photos:admin_list'))
     else:
-        tag = TagForm()
-    context = {'request': request,'form':tag}
+        data={
+            'title':tag.title,
+        }
+        tag = TagForm(data)
+    context = {'title':getTitle(), 'request': request,'form':tag}
     return render(request, 'photos/add.html', context)
 
 
 
 def view_single(request,id):
     photo = get_object_or_404(Photo, pk=id)
-    context = {'request': request,'photo':photo}
+    context = {'title':getTitle(), 'request': request,'photo':photo}
     return render(request, 'photos/view_single.html', context)
 
 def view_all(request):
     photos = Photo.objects.all().order_by('title')
-    context = {'request': request,'photos':photos}
+    context = {'title':getTitle(), 'request': request,'photos':photos}
     return render(request, 'photos/view_all.html', context)
 
 
 
 def preview(request,id):
     photo = get_object_or_404(Photo, pk=id)
-    #photo_file = open(photo.image_file)
-    #return FileResponse(photo.image_file.open())
-    #return HttpResponse(content=FileResponse(open(photo.image_file.name, 'rb')),content_type=mimetypes.guess_type(photo.image_file.name)[0])
-    #return HttpResponse(content=FileResponse(open(photo.image_file.name, 'rb')),content_type=mimetypes.guess_type(photo.image_file.name)[0])
+    
     return HttpResponse(content=FileResponse(open(photo.preview_file.name, 'rb')),content_type=mimetypes.guess_type(photo.preview_file.name)[0])
+    #return FileResponse(open(photo.preview_file.name, 'rb'))
     
 
 def thumbnail(request,id):
@@ -176,9 +185,93 @@ def original(request,id):
     #photo_file = open(photo.image_file)
     #return FileResponse(photo.image_file.open())
     return HttpResponse(content=FileResponse(open(photo.image_file.name, 'rb')),content_type=mimetypes.guess_type(photo.image_file.name)[0])
+    #return FileResponse(open(photo.image_file.name, 'rb'))
     #return HttpResponse(content=FileResponse(open(photo.thumbnail_file.name, 'rb')),content_type=mimetypes.guess_type(photo.thumbnail_file.name)[0])
 
 
+def add_page(request):
+    if not request.user.is_authenticated:
+        return HttpResponseRedirect(reverse('photos:index'))
+    if request.method == "POST":
+        page = PageForm(request.POST) # A form bound to the POST data
+        if page.is_valid(): # All validation rules pass
+            new_page = page.save()
+            return HttpResponseRedirect(reverse('photos:admin_list'))
+    else:
+        page = PageForm()
+    context = {'title':getTitle(), 'request': request,'form':page}
+    return render(request, 'photos/add.html', context)
+    
+def edit_page(request,id):
+    if not request.user.is_authenticated:
+        return HttpResponseRedirect(reverse('photos:index'))
+    page = get_object_or_404(Page, pk=id)
+    if request.method == "POST":
+        page = PageForm(request.POST) # A form bound to the POST data
+        if page.is_valid(): # All validation rules pass
+            new_page = page.save()
+            return HttpResponseRedirect(reverse('photos:admin_list'))
+    else:
+        data={'title':page.title,
+            'url':page.url,
+            'content':page.content,
+        }
+        page = PageForm(data)
+    context = {'title':getTitle(), 'request': request,'form':page}
+    return render(request, 'photos/add.html', context)
+
+def page(request,url_var):
+    
+    page_var = get_object_or_404(Page, url=url_var)
+
+    context = {'title':getTitle(),'request': request,'data':page_var}
+    return render(request, 'photos/page.html', context)
+
+
+def add_nav(request):
+    if not request.user.is_authenticated:
+        return HttpResponseRedirect(reverse('photos:index'))
+    if request.method == "POST":
+        nav = NavForm(request.POST) # A form bound to the POST data
+        if nav.is_valid(): # All validation rules pass
+            new_nav = nav.save()
+            return HttpResponseRedirect(reverse('photos:admin_list'))
+    else:
+        nav = NavForm()
+    context = {'title':getTitle(), 'request': request,'form':nav}
+    return render(request, 'photos/add.html', context)
+    
+def edit_nav(request,id):
+    if not request.user.is_authenticated:
+        return HttpResponseRedirect(reverse('photos:index'))
+    nav = get_object_or_404(Nav, pk=id)
+    if request.method == "POST":
+        nav = NavForm(request.POST) # A form bound to the POST data
+        if nav.is_valid(): # All validation rules pass
+            new_nav = nav.save()
+            return HttpResponseRedirect(reverse('photos:admin_list'))
+    else:
+        data={'title':nav.title,
+            'url':nav.url,
+            'content':nav.content,
+        }
+        nav = NavForm(data)
+    context = {'title':getTitle(), 'request': request,'form':nav}
+    return render(request, 'photos/add.html', context)
+
+def reload_previews(request):
+    if not request.user.is_authenticated:
+        return HttpResponseRedirect(reverse('photos:index'))
+    photos = Photo.objects.all().order_by('title')
+    for photo in photos:
+        #photo = Photo.objects.get(pk=new_photo.id)
+        photo.preview_file = createPreview(photo.image_file.name,'photo_files/previews/')
+        photo.thumbnail_file = createThumbnail(photo.image_file.name,'photo_files/thumbnails/')
+        photo.save()
+
+    return HttpResponseRedirect(reverse('photos:view_all'))
+
 def test(request,id):
-    context = {'request': request}
+    
+    context = {'title':getTitle(), 'request': request}
     return render(request, 'photos/test.html', context)

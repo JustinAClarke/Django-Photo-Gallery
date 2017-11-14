@@ -16,7 +16,7 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
     """
 from django.forms import ModelForm
-from .models import Photo, Tag
+from .models import Photo, Tag, Page, Nav
 
 
 # Create the form class.
@@ -38,3 +38,14 @@ class TagForm(ModelForm):
         fields = '__all__'
         #fields = [ 'Title' ]
 
+class PageForm(ModelForm):
+    class Meta:
+        model = Page
+        fields = '__all__'
+        #fields = [ 'Title' ]
+
+class NavForm(ModelForm):
+    class Meta:
+        model = Nav
+        fields = '__all__'
+        #fields = [ 'Title' ]

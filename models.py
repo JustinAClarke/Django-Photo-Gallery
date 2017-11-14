@@ -38,3 +38,15 @@ class Photo(models.Model):
     
     def __str__(self):
         return self.title
+
+class Page(models.Model):
+    title = models.CharField(max_length=200)
+    url = models.CharField(max_length=128,unique=True)
+    content = models.TextField()
+    
+    def __str__(self):
+        return self.title
+
+class Nav(models.Model):
+    title = models.CharField(max_length=200)
+    url = models.CharField(max_length=128)

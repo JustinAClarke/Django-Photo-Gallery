@@ -15,17 +15,18 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
     """
+from django import template
+from django.shortcuts import render
+from photos.models import Nav
 
-from django.contrib import admin
 
-# Register your models here.
+register = template.Library()
 
-from .models import Photo, Tag, Page, Nav
 
-admin.site.register(Page)
-
-admin.site.register(Photo)
-
-admin.site.register(Nav)
-
-admin.site.register(Tag)
+@register.inclusion_tag('photos/nav_bar.html', takes_context=True)
+#@register.tag
+#@register.filter(name='get_tags')
+def get_nav_bar(context):
+    nav = Nav.objects.all().order_by('title')
+    context = {'tags': tags}
+    return context
