@@ -20,12 +20,8 @@ from django.contrib import admin
 
 # Register your models here.
 
-from .models import Photo, Tag, Page, Nav
-
-admin.site.register(Page)
+from .models import Photo, Tag
 
 admin.site.register(Photo)
-
-admin.site.register(Nav)
 
 admin.site.register(Tag)

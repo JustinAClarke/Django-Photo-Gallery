@@ -25,6 +25,7 @@
     <link rel="stylesheet" href="{% static 'photos/css/style.css' %}" />
     
     <!--link rel="stylesheet" type="text/css" href="/static/admin/css/base.css" /-->
+    {% include "styles.html" %}
     <title>{{ title }}</title>
 </head>
 
@@ -35,16 +36,15 @@
             <br>
         </div>
         {% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}
-        <div id="navbar">
+        <div id="navbar" class="pure-menu pure-menu-horizontal">
             <hr>
             {% block navbar %}
-            <ul>
-                <li><a class="nav" href="{% url 'photos:index' %}">Home</a></li>
-                <li><a class="nav" href="{% url 'photos:page' 'about_me' %}">About Me</a></li>
+            <ul class="pure-menu-list">
+                <li class="pure-menu-item"><a class="nav pure-menu-link" href="{% url 'photos:index' %}">Home</a></li>
                 
-                <li><a class="nav" href="{% url 'photos:view_all' %}">List</a></li>
+                <li class="pure-menu-item"><a class="nav pure-menu-link" href="{% url 'photos:view_all' %}">List</a></li>
                 {% if user.is_authenticated %}
-                <li><a class="nav" href="{% url 'photos:admin_list' %}">Admin</a></li>
+                <li class="pure-menu-item"><a class="nav pure-menu-link" href="{% url 'photos:admin_list' %}">Admin</a></li>
                 {% endif %}
             </ul>
             {% endblock %}
@@ -56,6 +56,10 @@
         </div>
     </div>
     <script type="text/javascript" src="{% static 'photos/js/main.js' %}" ></script>
+    <div id="footer">
+        {% include "footer.html" %}    
+    </div>
+    {% include "scripts.html" %}
 </body>
 </html>
 

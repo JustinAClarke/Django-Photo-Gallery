@@ -30,7 +30,7 @@ from .resize import createPreview, createThumbnail
 # Create your views here.
 
 
-from .models import Photo, Tag, Page
+from .models import Photo, Tag
 from .forms import *
 
 def getTitle(title=False):
@@ -55,10 +55,8 @@ def admin_list(request):
         return HttpResponseRedirect(reverse('photos:index'))
     photos = Photo.objects.all().order_by('title')
     tags = Tag.objects.all().order_by('title')
-    pages = Page.objects.all().order_by('title')
-    navs = Nav.objects.all().order_by('title')
 
-    context = {'title':getTitle(), 'request': request,'photos':photos,'tags':tags,'pages':pages,'navs':navs}
+    context = {'title':getTitle(), 'request': request,'photos':photos,'tags':tags}
     return render(request, 'photos/admin_list.html', context)
 
 
@@ -154,7 +152,7 @@ def edit_tag(request,id):
 
 def view_single(request,id):
     photo = get_object_or_404(Photo, pk=id)
-    context = {'title':getTitle(), 'request': request,'photo':photo}
+    context = {'title':getTitle(photo.title), 'request': request,'photo':photo}
     return render(request, 'photos/view_single.html', context)
 
 def view_all(request):
@@ -187,77 +185,6 @@ def original(request,id):
     return HttpResponse(content=FileResponse(open(photo.image_file.name, 'rb')),content_type=mimetypes.guess_type(photo.image_file.name)[0])
     #return FileResponse(open(photo.image_file.name, 'rb'))
     #return HttpResponse(content=FileResponse(open(photo.thumbnail_file.name, 'rb')),content_type=mimetypes.guess_type(photo.thumbnail_file.name)[0])
-
-
-def add_page(request):
-    if not request.user.is_authenticated:
-        return HttpResponseRedirect(reverse('photos:index'))
-    if request.method == "POST":
-        page = PageForm(request.POST) # A form bound to the POST data
-        if page.is_valid(): # All validation rules pass
-            new_page = page.save()
-            return HttpResponseRedirect(reverse('photos:admin_list'))
-    else:
-        page = PageForm()
-    context = {'title':getTitle(), 'request': request,'form':page}
-    return render(request, 'photos/add.html', context)
-    
-def edit_page(request,id):
-    if not request.user.is_authenticated:
-        return HttpResponseRedirect(reverse('photos:index'))
-    page = get_object_or_404(Page, pk=id)
-    if request.method == "POST":
-        page = PageForm(request.POST) # A form bound to the POST data
-        if page.is_valid(): # All validation rules pass
-            new_page = page.save()
-            return HttpResponseRedirect(reverse('photos:admin_list'))
-    else:
-        data={'title':page.title,
-            'url':page.url,
-            'content':page.content,
-        }
-        page = PageForm(data)
-    context = {'title':getTitle(), 'request': request,'form':page}
-    return render(request, 'photos/add.html', context)
-
-def page(request,url_var):
-    
-    page_var = get_object_or_404(Page, url=url_var)
-
-    context = {'title':getTitle(),'request': request,'data':page_var}
-    return render(request, 'photos/page.html', context)
-
-
-def add_nav(request):
-    if not request.user.is_authenticated:
-        return HttpResponseRedirect(reverse('photos:index'))
-    if request.method == "POST":
-        nav = NavForm(request.POST) # A form bound to the POST data
-        if nav.is_valid(): # All validation rules pass
-            new_nav = nav.save()
-            return HttpResponseRedirect(reverse('photos:admin_list'))
-    else:
-        nav = NavForm()
-    context = {'title':getTitle(), 'request': request,'form':nav}
-    return render(request, 'photos/add.html', context)
-    
-def edit_nav(request,id):
-    if not request.user.is_authenticated:
-        return HttpResponseRedirect(reverse('photos:index'))
-    nav = get_object_or_404(Nav, pk=id)
-    if request.method == "POST":
-        nav = NavForm(request.POST) # A form bound to the POST data
-        if nav.is_valid(): # All validation rules pass
-            new_nav = nav.save()
-            return HttpResponseRedirect(reverse('photos:admin_list'))
-    else:
-        data={'title':nav.title,
-            'url':nav.url,
-            'content':nav.content,
-        }
-        nav = NavForm(data)
-    context = {'title':getTitle(), 'request': request,'form':nav}
-    return render(request, 'photos/add.html', context)
 
 def reload_previews(request):
     if not request.user.is_authenticated:

@@ -4,9 +4,6 @@
 <ul>
     <li><a href="#photo">Quick Jump to Photos</a></li>
     <li><a href="#tags">Quick Jump to Tags</a></li>
-    <li><a href="#nav">Quick Jump to Nav Bar</a></li>
-    <li><a href="#page">Quick Jump to Pages</a></li>
-    
 </ul>
 
 
@@ -28,22 +25,5 @@
     {% endfor %}
     </ul>
     
-    <a id="nav" href="{% url 'photos:add_nav' %}">Add New Nav Bar</a>
-    <ul>
-    {% for nav in navbar %}
-        <li>
-            <a href="{% url 'photos:edit_nav' nav.id %}">{{ nav.title }}</a>
-        </li>
-    {% endfor %}
-    </ul>
-    
-    <a id="page" href="{% url 'photos:add_page' %}">Add New Page</a>
-    <ul>
-    {% for page in pages %}
-        <li>
-            <a href="{% url 'photos:edit_page' page.id %}">{{ page.title }}</a>
-        </li>
-    {% endfor %}
-    </ul>
 
 {% endblock %}

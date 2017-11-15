@@ -66,21 +66,6 @@ urlpatterns = [
     # ex: /photos/original/
     url(r'^original/(?P<id>[0-9]+)/$', views.original, name='original'),
     
-    # ex: /photos/page/edit/
-    url(r'^page/edit/(?P<id>[0-9]+)/$', views.edit_page, name='edit_page'),
-    
-    # ex: /photos/page/add/
-    url(r'^page/add/$', views.add_page, name='add_page'),
-    
-    # ex: /photos/page/
-    url(r'^page/(?P<url_var>\w+)/$', views.page, name='page'),
-    
-    # ex: /photos/nav/edit/
-    url(r'^nav/edit/(?P<id>[0-9]+)/$', views.edit_nav, name='edit_nav'),
-    
-    # ex: /photos/nav/add/
-    url(r'^nav/add/$', views.add_nav, name='add_nav'),
-    
     # ex: /photos/reload_previews/
     url(r'^reload_previews/$', views.reload_previews, name='reload_previews'),
     
