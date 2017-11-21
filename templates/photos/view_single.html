@@ -5,7 +5,7 @@
 
  
 <div id="preview">
-    <img src="{% url 'photos:preview' photo.id %}" />
+    <img class="pure-img" src="{% url 'photos:preview' photo.id %}" />
 
 </div>
 <div id="notes">
@@ -22,5 +22,8 @@
         {{ photo.description }}
     </div>
     
+    {% if user.is_authenticated %}
+        <a class="pure-button button-warning" href="{% url 'photos:edit' photo.id %}">Edit</a>
+    {% endif %}
 </div>
 {% endblock %}

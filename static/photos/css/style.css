@@ -29,9 +29,10 @@
 }
 
 .photo{
-    float: left;
+  /*  float: left;
     margin: 3px;
     width: 32.5%;
+     */
 }
 
 .photo:nth-child(odd){

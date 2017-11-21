@@ -29,10 +29,18 @@ Built to be used similar to a portfolio.
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+### Installing / Getting Started
+
+Bash script
+[install.sh](install.sh)
+
+Install Steps
+[install.md](install.md)
+
 ### TODO
 
- * Upload Image
- * Resize image, for thumbnail, and preview
+ * Upload Image (DONE)
+ * Resize image, for thumbnail, and preview (DONE)
  * Create tag view / display
  * Create tag search
  * Create tag from add photo page
