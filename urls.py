@@ -17,12 +17,17 @@
     """
 
 from django.conf.urls import url
+from django.views.generic.base import RedirectView
+
 
 from . import views
 
 app_name = 'photos'
 
 urlpatterns = [
+    #favicon
+    url(r'^favicon\.ico$', RedirectView.as_view(url='/static/photos/image/favicon.svg', permanent=True)),
+
     # ex: /photos/
     url(r'^$', views.index, name='index'),
     

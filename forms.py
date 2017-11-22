@@ -16,11 +16,15 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
     """
 from django.forms import ModelForm
+from django import forms
 from .models import Photo, Tag
 
 
 # Create the form class.
 class PhotoForm(ModelForm):
+    description = forms.CharField(widget=forms.Textarea, required=False)
+    sales_embed = forms.CharField(widget=forms.Textarea, required=False)
+
     class Meta:
         model = Photo
         #fields = '__all__'
@@ -30,6 +34,7 @@ class PhotoForm(ModelForm):
         'description',
         'tags',
         'image_file',
+        'sales_embed',
         ]
 
 class TagForm(ModelForm):

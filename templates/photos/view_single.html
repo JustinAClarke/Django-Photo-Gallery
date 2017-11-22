@@ -21,6 +21,11 @@
     <div id="description">
         {{ photo.description }}
     </div>
+    <div id="description">
+        {% autoescape off %}
+            {{ photo.sales_embed }}
+        {% endautoescape %}
+    </div>
     
     {% if user.is_authenticated %}
         <a class="pure-button button-warning" href="{% url 'photos:edit' photo.id %}">Edit</a>

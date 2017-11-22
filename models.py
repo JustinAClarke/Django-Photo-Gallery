@@ -35,6 +35,7 @@ class Photo(models.Model):
     image_file = models.ImageField(upload_to='photo_files/upload')
     preview_file = models.ImageField(upload_to='photo_files/previews',null=True)
     thumbnail_file = models.ImageField(upload_to='photo_files/thumbnails',null=True)
+    sales_embed = models.TextField(null=True)
     
     def __str__(self):
         return self.title
