@@ -6,7 +6,7 @@ function photo_list_hash() {
     hash = window.location.hash.substr(1);
     for(i=0;i<list.length; i++){
         var data_href = list[i].getAttribute("data-href");
-        if(data_href.includes(hash)){
+        if(data_href.indexOf(hash) != -1){
             list[i].style.display = "block";
         }
         else{
