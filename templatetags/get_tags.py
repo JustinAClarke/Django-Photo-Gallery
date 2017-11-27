@@ -50,7 +50,9 @@ def get_tags(photo_id):
     for tag in photo.tags.all():
         tags.append(tag.title)
     #return str(tags_query)
-    return tag_str.join(tags)
+    #return tag_str.join(tags)
+    return tags
+    
     #return tag_str
     #categories = Category.objects.all().order_by('Title')
     #context = {'categories': categories}

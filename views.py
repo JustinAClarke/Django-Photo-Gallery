@@ -89,7 +89,7 @@ def edit(request,id):
         return HttpResponseRedirect(reverse('photos:index'))
     photo = get_object_or_404(Photo, pk=id)
     if request.method == "POST":
-        photo = PhotoForm(request.POST) # A form bound to the POST data
+        photo = PhotoForm(request.POST,instance=photo) # A form bound to the POST data
         if photo.is_valid(): # All validation rules pass
             new_photo = photo.save()
             #resize image for thumbnail and preview
@@ -136,7 +136,7 @@ def edit_tag(request,id):
         return HttpResponseRedirect(reverse('photos:index'))
     tag = get_object_or_404(Tag, pk=id)
     if request.method == "POST":
-        tag = TagForm(request.POST) # A form bound to the POST data
+        tag = TagForm(request.POST, instance=tag) # A form bound to the POST data
         if tag.is_valid(): # All validation rules pass
             new_tag = tag.save()
             return HttpResponseRedirect(reverse('photos:admin_list'))
@@ -157,7 +157,7 @@ def view_single(request,id):
 
 def view_all(request):
     photos = Photo.objects.all().order_by('title')
-    context = {'title':getTitle(), 'request': request,'photos':photos}
+    context = {'title':getTitle('Gallery'), 'request': request,'photos':photos}
     return render(request, 'photos/view_all.html', context)
 
 

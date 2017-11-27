@@ -7,10 +7,10 @@ function photo_list_hash() {
     for(i=0;i<list.length; i++){
         var data_href = list[i].getAttribute("data-href");
         if(data_href.includes(hash)){
-            list[i].style = "display:block;";
+            list[i].style.display = "block";
         }
         else{
-            list[i].style = "display:none;";
+            list[i].style.display = "none";
         }
     }
 }
@@ -30,3 +30,13 @@ function nav_active(){
 }
 
 nav_active();
+
+/*
+
+['load','onhashchange'].map(function(e){
+    window.addEventListener(e,photo_list_hash);
+});
+*/
+photo_list_hash();
+window.onhashchange = window.onload = photo_list_hash;
+

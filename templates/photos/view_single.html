@@ -16,16 +16,24 @@
         {{ photo.capture_date }}
     </div>
     <div id="tags">
-        {{ photo.id |get_tags }}
+        {% with tags=photo.id|get_tags %}
+        {% for tag in tags %}
+        
+            <a href="{% url 'photos:view_all' %}#{{ tag }}">{{ tag }}</a>
+        {% endfor %}
+        {% endwith %}
+        {#{ photo.id |get_tags }#}
     </div>
     <div id="description">
         {{ photo.description }}
     </div>
-    <div id="description">
+    {% if photo.sales_embed %}
+    <div id="sales_embed">
         {% autoescape off %}
             {{ photo.sales_embed }}
         {% endautoescape %}
     </div>
+    {% endif %}
     
     {% if user.is_authenticated %}
         <a class="pure-button button-warning" href="{% url 'photos:edit' photo.id %}">Edit</a>
