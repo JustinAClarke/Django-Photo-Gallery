@@ -24,7 +24,7 @@ from django.core.files import File
 
 import mimetypes
 
-from .resize import createPreview, createThumbnail
+from .resize import createPreview, createThumbnail, createThumbnailSquare
 
 
 # Create your views here.
@@ -35,7 +35,7 @@ from .forms import *
 
 def getTitle(title=False):
     if(title):
-        return getTitle() + " - " + title
+        return getTitle() + " — " + title
     else:
         return "Justin Fuhrmeister-Clarke"
 
@@ -72,7 +72,7 @@ def add(request):
             #resize image for thumbnail and preview
             photo = Photo.objects.get(pk=new_photo.id)
             photo.preview_file = createPreview(photo.image_file.name,'photo_files/previews/')
-            photo.thumbnail_file = createThumbnail(photo.image_file.name,'photo_files/thumbnails/')
+            photo.thumbnail_file = createThumbnailSquare(photo.image_file.name,'photo_files/thumbnails/')
             photo.save()
             #end resize
             
@@ -95,7 +95,7 @@ def edit(request,id):
             #resize image for thumbnail and preview
             photo = Photo.objects.get(pk=new_photo.id)
             photo.preview_file = createPreview(photo.image_file.name,'photo_files/previews/')
-            photo.thumbnail_file = createThumbnail(photo.image_file.name,'photo_files/thumbnails/')
+            photo.thumbnail_file = createThumbnailSquare(photo.image_file.name,'photo_files/thumbnails/')
             photo.save()
             #end resize
             return HttpResponseRedirect(reverse('photos:admin_list'))
@@ -193,7 +193,7 @@ def reload_previews(request):
     for photo in photos:
         #photo = Photo.objects.get(pk=new_photo.id)
         photo.preview_file = createPreview(photo.image_file.name,'photo_files/previews/')
-        photo.thumbnail_file = createThumbnail(photo.image_file.name,'photo_files/thumbnails/')
+        photo.thumbnail_file = createThumbnailSquare(photo.image_file.name,'photo_files/thumbnails/')
         photo.save()
 
     return HttpResponseRedirect(reverse('photos:view_all'))

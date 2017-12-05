@@ -20,6 +20,12 @@ import os
 
 import exifread
 
+def getSmaller(num_one, num_two):
+    if(num_one <= num_two):
+        return num_one
+    else:
+        return num_two
+
 
 def getRotate(orientation):
     #print(orientation)
@@ -72,6 +78,36 @@ def createThumbnail(inFile,outDir,size=[430,430]):
     imThumbnail = im.copy()
     imThumbnail=imThumbnail.rotate(getRotate(orientation),expand=1)
     imThumbnail.thumbnail(size)
+    imThumbnail.save(outDir+"thumbnail-"+title+".jpg","JPEG")
+    imThumbnail.close()
+    
+    return outDir+"thumbnail-"+title+".jpg"
+
+def createThumbnailSquare(inFile,outDir,size=[430,430]):
+    pass
+    file, ext = os.path.splitext(inFile)
+    title= file.split('/')[-1]
+    im = Image.open(inFile)
+    
+    fRotate = open(inFile, 'rb')
+    tags = exifread.process_file(fRotate, stop_tag='Orientation')
+    try:
+        orientation=tags['Image Orientation']
+    except KeyError:
+        orientation="Horizontal (normal)"
+    fRotate.close()
+   
+    imThumbnail = im.copy()
+    imThumbnail=imThumbnail.rotate(getRotate(orientation),expand=1)
+    width, height = imThumbnail.size   # Get dimensions
+    left = (width - getSmaller(width,height))/2
+    top = (height - getSmaller(width,height))/2
+    right = (width + getSmaller(width,height))/2
+    bottom = (height + getSmaller(width,height))/2
+    imThumbnail = imThumbnail.crop((left, top, right, bottom))
+    
+    imThumbnail.thumbnail(size)
+
     imThumbnail.save(outDir+"thumbnail-"+title+".jpg","JPEG")
     imThumbnail.close()
     

@@ -12,7 +12,7 @@
 
 <div id="photos" class="pure-g">
     {% for photo in photos %}
-        <div class="photo pure-u-md-1-3" data-href="{{ photo.pk |get_tags }}">
+        <div class="photo pure-u-md-1-4" data-href="{{ photo.pk |get_tags }}">
             <a href="{% url 'photos:view_single' photo.id %}">
                 <img class="thumbnail pure-img" alt="{{ photo.title }}" src="{% url 'photos:thumbnail' photo.id %}" />
             </a>

@@ -29,10 +29,9 @@
 }
 
 .photo{
-  /*  float: left;
-    margin: 3px;
-    width: 32.5%;
-     */
+/*    padding: 2%;
+    padding-bottom: 20px;
+    */
 }
 
 .photo:nth-child(odd){
@@ -42,15 +41,7 @@
     
 }
 
-.thumbnail{
-    /*max-width:150px;
-    height:auto;*/
-    width:100%;
-    max-width:426px;
-    height:auto;
-    min-height: 200px;
-    max-height:500px;
-}
+
 
 .thumbnail>img{
     /*width:100%;*/
@@ -102,4 +93,16 @@
 #path_active{
     font-style: italic;
     text-decoration: underline;
+}
+
+input, textarea, select{
+    color: #000;
+}
+
+@media (max-width: 768px) {
+    .photo{
+        margin-left:auto;
+        margin-right:auto;
+
+    }
 }
