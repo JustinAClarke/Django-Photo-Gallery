@@ -72,8 +72,8 @@ def add(request):
 
             #resize image for thumbnail and preview
             photo = Photo.objects.get(pk=new_photo.id)
-            photo.preview_file = createPreview(default_storage.location+'/'+photo.image_file.name,'photo_files/previews/')
-            photo.thumbnail_file = createThumbnailSquare(default_storage.location+'/'+photo.image_file.name,'photo_files/thumbnails/')
+            photo.preview_file = createPreview(default_storage.location+'/'+photo.image_file.name,default_storage.location+'/'+'photo_files/previews/')
+            photo.thumbnail_file = createThumbnailSquare(default_storage.location+'/'+photo.image_file.name,default_storage.location+'/'+'photo_files/thumbnails/')
             photo.save()
             #end resize
             
@@ -95,8 +95,8 @@ def edit(request,id):
             new_photo = photo.save()
             #resize image for thumbnail and preview
             photo = Photo.objects.get(pk=new_photo.id)
-            photo.preview_file = createPreview(default_storage.location+'/'+photo.image_file.name,'photo_files/previews/')
-            photo.thumbnail_file = createThumbnailSquare(default_storage.location+'/'+photo.image_file.name,'photo_files/thumbnails/')
+            photo.preview_file = createPreview(default_storage.location+'/'+photo.image_file.name,default_storage.location+'/'+'photo_files/previews/')
+            photo.thumbnail_file = createThumbnailSquare(default_storage.location+'/'+photo.image_file.name,default_storage.location+'/'+'photo_files/thumbnails/')
             photo.save()
             #end resize
             return HttpResponseRedirect(reverse('photos:admin_list'))
@@ -193,8 +193,8 @@ def reload_previews(request):
     photos = Photo.objects.all().order_by('title')
     for photo in photos:
         #photo = Photo.objects.get(pk=new_photo.id)
-        photo.preview_file = createPreview(default_storage.location+'/'+photo.image_file.name,'photo_files/previews/')
-        photo.thumbnail_file = createThumbnailSquare(default_storage.location+'/'+photo.image_file.name,'photo_files/thumbnails/')
+        photo.preview_file = createPreview(default_storage.location+'/'+photo.image_file.name,default_storage.location+'/'+'photo_files/previews/')
+        photo.thumbnail_file = createThumbnailSquare(default_storage.location+'/'+photo.image_file.name,default_storage.location+'/'+'photo_files/thumbnails/')
         photo.save()
 
     return HttpResponseRedirect(reverse('photos:view_all'))
