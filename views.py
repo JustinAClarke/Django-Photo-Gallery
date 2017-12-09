@@ -20,6 +20,7 @@ from django.shortcuts import get_object_or_404, render
 from django.http import HttpResponseRedirect,FileResponse,HttpResponse, HttpResponseForbidden
 from django.urls import reverse
 from django.core.files import File
+from django.core.files.storage import default_storage
 
 
 import mimetypes
@@ -71,8 +72,8 @@ def add(request):
 
             #resize image for thumbnail and preview
             photo = Photo.objects.get(pk=new_photo.id)
-            photo.preview_file = createPreview(photo.image_file.name,'photo_files/previews/')
-            photo.thumbnail_file = createThumbnailSquare(photo.image_file.name,'photo_files/thumbnails/')
+            photo.preview_file = createPreview(default_storage.location+'/'+photo.image_file.name,'photo_files/previews/')
+            photo.thumbnail_file = createThumbnailSquare(default_storage.location+'/'+photo.image_file.name,'photo_files/thumbnails/')
             photo.save()
             #end resize
             
@@ -94,8 +95,8 @@ def edit(request,id):
             new_photo = photo.save()
             #resize image for thumbnail and preview
             photo = Photo.objects.get(pk=new_photo.id)
-            photo.preview_file = createPreview(photo.image_file.name,'photo_files/previews/')
-            photo.thumbnail_file = createThumbnailSquare(photo.image_file.name,'photo_files/thumbnails/')
+            photo.preview_file = createPreview(default_storage.location+'/'+photo.image_file.name,'photo_files/previews/')
+            photo.thumbnail_file = createThumbnailSquare(default_storage.location+'/'+photo.image_file.name,'photo_files/thumbnails/')
             photo.save()
             #end resize
             return HttpResponseRedirect(reverse('photos:admin_list'))
@@ -165,7 +166,7 @@ def view_all(request):
 def preview(request,id):
     photo = get_object_or_404(Photo, pk=id)
     
-    return HttpResponse(content=FileResponse(open(photo.preview_file.name, 'rb')),content_type=mimetypes.guess_type(photo.preview_file.name)[0])
+    return HttpResponse(content=FileResponse(open(default_storage.location+'/'+photo.preview_file.name, 'rb')),content_type=mimetypes.guess_type(photo.preview_file.name)[0])
     #return FileResponse(open(photo.preview_file.name, 'rb'))
     
 
@@ -174,7 +175,7 @@ def thumbnail(request,id):
     #photo_file = open(photo.image_file)
     #return FileResponse(photo.image_file.open())
     #return HttpResponse(content=FileResponse(open(photo.image_file.name, 'rb')),content_type=mimetypes.guess_type(photo.image_file.name)[0])
-    return HttpResponse(content=FileResponse(open(photo.thumbnail_file.name, 'rb')),content_type=mimetypes.guess_type(photo.thumbnail_file.name)[0])
+    return HttpResponse(content=FileResponse(open(default_storage.location+'/'+photo.thumbnail_file.name, 'rb')),content_type=mimetypes.guess_type(photo.thumbnail_file.name)[0])
 
 def original(request,id):
     if not request.user.is_authenticated:
@@ -182,7 +183,7 @@ def original(request,id):
     photo = get_object_or_404(Photo, pk=id)
     #photo_file = open(photo.image_file)
     #return FileResponse(photo.image_file.open())
-    return HttpResponse(content=FileResponse(open(photo.image_file.name, 'rb')),content_type=mimetypes.guess_type(photo.image_file.name)[0])
+    return HttpResponse(content=FileResponse(open(default_storage.location+'/'+photo.image_file.name, 'rb')),content_type=mimetypes.guess_type(photo.image_file.name)[0])
     #return FileResponse(open(photo.image_file.name, 'rb'))
     #return HttpResponse(content=FileResponse(open(photo.thumbnail_file.name, 'rb')),content_type=mimetypes.guess_type(photo.thumbnail_file.name)[0])
 
@@ -192,8 +193,8 @@ def reload_previews(request):
     photos = Photo.objects.all().order_by('title')
     for photo in photos:
         #photo = Photo.objects.get(pk=new_photo.id)
-        photo.preview_file = createPreview(photo.image_file.name,'photo_files/previews/')
-        photo.thumbnail_file = createThumbnailSquare(photo.image_file.name,'photo_files/thumbnails/')
+        photo.preview_file = createPreview(default_storage.location+'/'+photo.image_file.name,'photo_files/previews/')
+        photo.thumbnail_file = createThumbnailSquare(default_storage.location+'/'+photo.image_file.name,'photo_files/thumbnails/')
         photo.save()
 
     return HttpResponseRedirect(reverse('photos:view_all'))
