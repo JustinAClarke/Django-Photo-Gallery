@@ -20,6 +20,7 @@ from django.shortcuts import get_object_or_404, render
 from django.http import HttpResponseRedirect,FileResponse,HttpResponse, HttpResponseForbidden
 from django.urls import reverse
 from django.core.files import File
+from django.conf import settings
 from django.core.files.storage import default_storage
 
 
@@ -35,10 +36,14 @@ from .models import Photo, Tag
 from .forms import *
 
 def getTitle(title=False):
+    string = ""
+    try:
+        string = settings.SITE_TITLE
+    except:
+        string = "Photos Title"
     if(title):
-        return getTitle() + " — " + title
-    else:
-        return "Justin Fuhrmeister-Clarke"
+        string += " - " + title
+    return string
 
 def index(request):
     context = {'title':getTitle(), 'request': request}
